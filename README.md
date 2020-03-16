@@ -5,12 +5,14 @@ This repository includes two scripts:
 The `setup.py` script allows the user to connect the "MagicHue" lightbulb to their Wi-Fi.
 The `magichue.py` script provides an easy API for the "MagicHue" lightbulbs.
 
-## Instalation
+## Installation
 
 1. Plug in your MagicHue lightbulb and turn it on. It will start flashing different colors.
 2. Connect to its wifi (something like LEDnetE1234B)
 3. Run the `setup.py` script, providing your SSID and your WiFi password:
 `python3 setup.py -ssid MyWifiEndpoint -pswd MyAwesomePassword`
+
+If the script worked, your lightbulb will turn green within a few seconds.
 
 *Note: Currently the script is automated for WPA2PSK / AES only. Modify it if your WiFi uses a different mode and encryption.*
 
