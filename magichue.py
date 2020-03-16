@@ -30,7 +30,7 @@ def process_rgb(rgb):
 
     values = [int(v) for v in rgb]
     values.insert(0,49) # add header
-    values.extend([0,240,15]) # add tail
+    values.extend([0,0,240,15]) # add tail
     return values
 
 def print_error(message):
