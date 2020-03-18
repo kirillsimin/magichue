@@ -9,14 +9,32 @@ def add_checksum(values):
     values.append(checksum)
     return values
 
-def send(ip, values):
-    port = 5577
+def get_version(ip):
+    try: 
+        data = bytearray(process_raw('48:46:2d:41:31:31:41:53:53:49:53:54:48:52:45:41:44')) #HF-A11ASSISTHREAD
+        
+        s = socket.socket(family=socket.AF_INET, type=socket.SOCK_DGRAM)
+        s.sendto(data, (ip,48899))
+        response = s.recvfrom(1024)
+        
+        msg = response[0].decode('utf-8')
+        version = msg.split(',')
+        
+        return version[2]
+    except:
+        print_error("Could not get the bulb's version")
+        return None
 
-    s = socket.socket()
-    s.connect((ip, port))
-    
-    s.send(bytearray(add_checksum(values)))
-    s.close()
+def send(ip, values):
+    try:
+        get_version(ip)
+
+        s = socket.socket()
+        s.connect((ip, 5577))
+        s.send(bytearray(add_checksum(values)))
+        s.close()
+    except:
+        print_error("Could not send the message to the bulb")
 
 def process_raw(raw):
     raw = raw.split(':')
@@ -24,13 +42,18 @@ def process_raw(raw):
     values = [int(v,16) for v in values]
     return values
 
-def process_rgb(rgb):
+def process_rgb(rgb, version):
     rgb = rgb.split(',')
     if len(rgb) < 3: print_error('Must have three color values (0-255) for R,G,B')
 
     values = [int(v) for v in rgb]
     values.insert(0,49) # add header
-    values.extend([0,0,240,15]) # add tail
+
+    # this version has an extra zero in the body
+    if version == "AK001-ZJ2101":
+        values.extend([0])
+
+    values.extend([0,240,15]) # add tail
     return values
 
 def print_error(message):
@@ -55,7 +78,9 @@ def Main(args):
         values = process_raw(args.raw)
 
     if args.rgb is not None:
-        values = process_rgb(args.rgb)
+        version = get_version(args.ip)
+        if version is None: sys.exit()
+        values = process_rgb(args.rgb, version)
 
     if 'values' in locals():
         send(args.ip, values)
