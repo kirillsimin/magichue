@@ -23,12 +23,19 @@ Once your lightbulb is on your network, you can use the `magichue.py` script wit
   -ip         provide the IP for the lightbulb; i.e. -ip 192.168.2.2
   -raw        accept colon separated raw hex string; i.e. -raw 71:23:0f
   -rgb        accept comma separated rgb values; i.e. -rgb 100,155,75
+  -warm       accept value of warm white (0-255); i.e. -warm 150
+  -power      accept 'on' or 'off'; i.e. -power on
+  -status     get the bulb's status
 ```
 The user must provide the lightbulb's IP address and either comma separated RGB values or a colon separated list of HEX values. An updated list of known combinations and rules of HEX values can be found below.
 
 #### RGB Example:
 This will set the lightbulb to be red:
 `python3 magichue.py -ip 192.168.2.2 -rgb 200,0,0`
+
+#### WARM WHITE Example:
+This will set the lightbulb to half power of warm white:
+`python3 magichue.py -ip 192.168.2.2 -warm 123`
 
 #### RAW Hex Example:
 This will turn the lightbulb on with its last setting:
