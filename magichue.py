@@ -56,6 +56,12 @@ def process_rgb(rgb, version):
     values.extend([0,240,15]) # add tail
     return values
 
+def process_power(power):
+    if power == 'on':
+        return process_raw('71:23:0f')
+    if power == 'off':
+        return process_raw('71:24:0f')
+
 def print_error(message):
     print('\n' + esc('31;1') + ' ERROR' + esc(0) + ' : ' + message)
     print(' Run with -h for help.\n')
@@ -69,6 +75,7 @@ def Main(args):
     parser.add_argument("-ip", help="provide the IP for the lightbulb; i.e. -ip 192.168.2.2")
     parser.add_argument("-raw", help="accept colon separated raw hex string; i.e. -raw 71:23:0f")
     parser.add_argument("-rgb", help="accept comma separated rgb values; i.e. -rgb 100,155,75")
+    parser.add_argument("-pwr", help="accept 'on' or 'off'")
     args = parser.parse_args()
 
     if args.ip is None:
@@ -81,6 +88,9 @@ def Main(args):
         version = get_version(args.ip)
         if version is None: sys.exit()
         values = process_rgb(args.rgb, version)
+
+    if args.pwr is not None:
+        values = process_power(args.pwr)
 
     if 'values' in locals():
         send(args.ip, values)
