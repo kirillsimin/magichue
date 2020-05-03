@@ -29,11 +29,10 @@ def get_status(ip):
 def get_version(ip):
     try: 
         data = bytearray(process_raw('48:46:2d:41:31:31:41:53:53:49:53:54:48:52:45:41:44')) #HF-A11ASSISTHREAD
-        
         s = socket.socket(family=socket.AF_INET, type=socket.SOCK_DGRAM)
-        s.sendto(data, (ip,5577))
+        s.sendto(data, (ip,48899))
         response = s.recvfrom(1024)
-        
+        s.close()
         msg = response[0].decode('utf-8')
         version = msg.split(',')
         
@@ -92,7 +91,7 @@ def Main(args):
     parser.add_argument("-ip", help="provide the IP for the lightbulb; i.e. -ip 192.168.2.2")
     parser.add_argument("-raw", help="accept colon separated raw hex string; i.e. -raw 71:23:0f")
     parser.add_argument("-rgb", help="accept comma separated rgb values; i.e. -rgb 100,155,75")
-    parser.add_argument("-pwr", help="accept 'on' or 'off'")
+    parser.add_argument("-power", help="accept 'on' or 'off'")
     parser.add_argument("-status", help="get the bulb's status", action='store_true')
     parsed_args = parser.parse_args()
 
@@ -112,8 +111,8 @@ def Main(args):
         if version is None: sys.exit()
         values = process_rgb(parsed_args.rgb, version)
 
-    if args.pwr is not None:
-        values = process_power(args.pwr)
+    if parsed_args.power is not None:
+        values = process_power(parsed_args.power)
 
     if 'values' in locals():
         send(parsed_args.ip, values)
