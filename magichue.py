@@ -2,6 +2,7 @@
 
 import sys
 import socket
+import json
 from argparse import ArgumentParser
 
 def add_checksum(values):
@@ -82,7 +83,7 @@ def process_power(power):
 
 def print_error(message):
     out = {"success":"false", "error":message}
-    print(out)
+    print(json.dumps(out))
     sys.exit()
 
 def Main(args):
@@ -111,8 +112,8 @@ def Main(args):
             rgb[i] = int('0x'+c, 16)
         
         warm = int('0x'+status[9], 16)
-        
-        print ({"power" : power, "rgb" : rgb, "warm" : warm})
+        out = {"power" : power, "rgb" : rgb, "warm" : warm}
+        print(json.dumps(out))
         return
 
     if parsed_args.raw is not None:
