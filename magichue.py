@@ -51,7 +51,10 @@ def send(ip, values):
         s.connect((ip, 5577))
         s.send(bytearray(add_checksum(values)))
         s.close()
-        print({"success":"true"})
+        
+        out = {"success":"true"}
+        print(json.dumps(out))
+        return
     except:
         print_error("Could not send the message to the bulb")
 
