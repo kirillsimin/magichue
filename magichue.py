@@ -50,7 +50,7 @@ def send(ip, values):
         s.connect((ip, 5577))
         s.send(bytearray(add_checksum(values)))
         s.close()
-        print({'success':'true'})
+        print({"success":"true"})
     except:
         print_error("Could not send the message to the bulb")
 
@@ -81,7 +81,7 @@ def process_power(power):
         return process_raw('71:24:0f')
 
 def print_error(message):
-    out = {'success':'false', 'error':message}
+    out = {"success":"false", "error":message}
     print(out)
     sys.exit()
 
@@ -112,7 +112,7 @@ def Main(args):
         
         warm = int('0x'+status[9], 16)
         
-        print ({'power' : power, 'rgb' : rgb, 'warm' : warm})
+        print ({"power" : power, "rgb" : rgb, "warm" : warm})
         return
 
     if parsed_args.raw is not None:
