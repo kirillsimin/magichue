@@ -50,7 +50,7 @@ def send(ip, values):
         s.connect((ip, 5577))
         s.send(bytearray(add_checksum(values)))
         s.close()
-        print({'success':True})
+        print({'success':'true'})
     except:
         print_error("Could not send the message to the bulb")
 
@@ -81,12 +81,9 @@ def process_power(power):
         return process_raw('71:24:0f')
 
 def print_error(message):
-    out = {'success':False, 'error':message}
+    out = {'success':'false', 'error':message}
     print(out)
     sys.exit()
-
-def esc(code):
-    return f'\033[{code}m'
 
 def Main(args):
     parser = ArgumentParser()
