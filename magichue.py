@@ -52,7 +52,7 @@ def send(ip, values):
         s.send(bytearray(add_checksum(values)))
         s.close()
         
-        out = {"success":"true"}
+        out = {"success":True}
         print(json.dumps(out))
         return
     except:
@@ -85,7 +85,7 @@ def process_power(power):
         return process_raw('71:24:0f')
 
 def print_error(message):
-    out = {"success":"false", "error":message}
+    out = {"success":False, "error":message}
     print(json.dumps(out))
     sys.exit()
 
