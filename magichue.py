@@ -14,6 +14,7 @@ def get_status(ip):
         data = bytearray(process_raw('81:8a:8b:96'))
         
         s = socket.socket()
+        s.settimeout(5)
         s.connect((ip,5577))
         s.send(data)
         response = s.recvfrom(1024)
@@ -50,6 +51,7 @@ def send(ip, values):
         s.connect((ip, 5577))
         s.send(bytearray(add_checksum(values)))
         s.close()
+        print({'success':True})
     except:
         print_error("Could not send the message to the bulb")
 
@@ -74,8 +76,8 @@ def process_rgb(rgb, version):
     return values
 
 def print_error(message):
-    print('\n' + esc('31;1') + ' ERROR' + esc(0) + ' : ' + message)
-    print(' Run with -h for help.\n')
+    out = {'success':False, 'error':message}
+    print(out)
     sys.exit()
 
 def esc(code):
@@ -107,6 +109,7 @@ def Main(args):
 
     if 'values' in locals():
         send(parsed_args.ip, values)
+
     else:
         print_error('Must provide raw hex or rgb values.')
 
