@@ -2,6 +2,7 @@
 
 import sys
 import socket
+import json
 from argparse import ArgumentParser
 
 def add_checksum(values):
@@ -14,6 +15,7 @@ def get_status(ip):
         data = bytearray(process_raw('81:8a:8b:96'))
         
         s = socket.socket()
+        s.settimeout(5)
         s.connect((ip,5577))
         s.send(data)
         response = s.recvfrom(1024)
@@ -49,6 +51,10 @@ def send(ip, values):
         s.connect((ip, 5577))
         s.send(bytearray(add_checksum(values)))
         s.close()
+        
+        out = {"success":True}
+        print(json.dumps(out))
+        return
     except:
         print_error("Could not send the message to the bulb")
 
@@ -79,12 +85,9 @@ def process_power(power):
         return process_raw('71:24:0f')
 
 def print_error(message):
-    print('\n' + esc('31;1') + ' ERROR' + esc(0) + ' : ' + message)
-    print(' Run with -h for help.\n')
+    out = {"success":False, "error":message}
+    print(json.dumps(out))
     sys.exit()
-
-def esc(code):
-    return f'\033[{code}m'
 
 def Main(args):
     parser = ArgumentParser()
@@ -113,8 +116,8 @@ def Main(args):
             rgb[i] = int('0x'+c, 16)
         
         warm = int('0x'+status[9], 16)
-        
-        print ({'power' : power, 'rgb' : rgb, 'warm' : warm})
+        out = {"power" : power, "rgb" : rgb, "warm" : warm}
+        print(json.dumps(out))
         return
 
     if parsed_args.raw is not None:
@@ -138,6 +141,7 @@ def Main(args):
 
     if 'values' in locals():
         send(parsed_args.ip, values)
+
     else:
         print_error('Must provide raw hex or rgb values.')
 
