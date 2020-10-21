@@ -97,6 +97,7 @@ def Main(args):
     parser.add_argument("-raw", help="accept colon separated raw hex string; i.e. -raw 71:23:0f")
     parser.add_argument("-rgb", help="accept comma separated rgb values; i.e. -rgb 100,155,75")
     parser.add_argument("-warm", help="accept value of warm white (0-255); i.e. -warm 150")
+    parser.add_argument("-cool", help="accept value of cool white (0-255); i.e. -cool 150")
     parser.add_argument("-power", help="accept 'on' or 'off'; i.e. -power on")
     parser.add_argument("-status", help="get the bulb's status", action='store_true')
     parsed_args = parser.parse_args()
@@ -132,6 +133,10 @@ def Main(args):
     if parsed_args.warm is not None:
         warm = hex(int(parsed_args.warm)).replace('0x','')
         values = process_raw('31:00:00:00:'+warm+':0f:0f')
+
+    if parsed_args.cool is not None:
+        cool = hex(int(parsed_args.cool)).replace('0x','')
+        values = process_raw('31:00:00:00:00:'+cool+':0f')
 
     if parsed_args.power is not None:
         values = process_power(parsed_args.power)
