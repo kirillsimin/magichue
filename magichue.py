@@ -32,6 +32,7 @@ def get_version(ip):
     try: 
         data = bytearray(process_raw('48:46:2d:41:31:31:41:53:53:49:53:54:48:52:45:41:44')) #HF-A11ASSISTHREAD
         s = socket.socket(family=socket.AF_INET, type=socket.SOCK_DGRAM)
+        s.settimeout(5)
         s.sendto(data, (ip,48899))
         response = s.recvfrom(1024)
         s.close()
@@ -48,6 +49,7 @@ def send(ip, values):
         get_version(ip)
 
         s = socket.socket()
+        s.settimeout(5)
         s.connect((ip, 5577))
         s.send(bytearray(add_checksum(values)))
         s.close()
